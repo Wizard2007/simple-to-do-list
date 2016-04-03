@@ -195,7 +195,7 @@
             return true;
         }
         catch (Exception $e){
-            $Adescription = "<br>error: ".$e->getMessage();
+            $Adescription = "error: ".$e->getMessage();
             return false;
         }
         finally {

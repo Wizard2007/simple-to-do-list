@@ -1,5 +1,11 @@
 All API perform in api.php . For execute function you need generate url with specific params. Params description below.
 
+All request return json file in same format
+
+{"result":x,"description":"s"}
+
+Where x - is the result of operation 0 - error , 1 - all done, and s - is the dwscription of x;
+
 Project API
 
 
@@ -36,6 +42,7 @@ action_type=get_all_projects_and_task
 example url:
 /api.php?action_type=get_all_projects_and_task
 
+Note, what in this case if the result of operation is 1 then in description will be json string with request data. Example of result see in \json-example\GetAllProjectAndTask.json
 
 Task API
 
@@ -45,15 +52,28 @@ Params:
 action_type=add_task_to_project
 description= - task descripition
 project_id= - project id
-ded_line_date= - dedline darte
-is_done=1
+ded_line_date= - dedline darte date
+is_done= - task state 0 - no done 1 - is done
 
 example url:
 /api.php?action_type=add_task_to_project&description=test description&project_id=1&ded_line_date=01.01.2016&is_done=1
 
+Update Task 
+
+Params:
+action_type=update_task
+description= - task descripition
+ded_line_date= - dedline darte date
 
 example url:
 t/api.php?action_type=update_task&id=1&description=rrr description&ded_line_date=01.01.2016&is_done=1
+
+Delete Task
+
+Params:
+action_type=delete_task
+id= - task id 
+
 
 example url:
 /api.php?action_type=delete_task&id=2
