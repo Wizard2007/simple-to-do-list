@@ -1,0 +1,1 @@
+SELECT tP.`NAME` FROM `tbl_Projects` as tP HAVING (SELECT COUNT(*) FROM `tbl_Tasks` as tT WHERE tT.`Project_id` = tP.`ID` and tT.`IS_DONE` = 1 ) > 10 order by tP.`NAME` ASC

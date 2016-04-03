@@ -1,0 +1,1 @@
+SELECT distinct(IS_DONE) FROM `tbl_Tasks` order by `IS_DONE`

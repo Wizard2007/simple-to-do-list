@@ -1,0 +1,1 @@
+SELECT ROUND(Length(tP.`NAME`)/2), tP.`NAME`, (SELECT COUNT(*) FROM tbl_Tasks tT WHERE tT.PROJECT_ID = tP.ID) FROM `tbl_Projects` as tP WHERE SUBSTRING(tP.`NAME`, ROUND(Length(tP.`NAME`)/2), 1) = BINARY "S"

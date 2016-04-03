@@ -1,0 +1,2 @@
+SELECT *, (SELECT COUNT(*) FROM tbl_Tasks tTsub WHERE tTsub.ID <> tT.id AND tTsub.DESCRIPTION = tT.DESCRIPTION AND tT.IS_DONE = tTsub.IS_DONE) as Mathc_Count FROM `tbl_Tasks` as tT LEFT JOIN tbl_Projects as tP on tT.Project_id = tP.ID 
+HAVING Mathc_Count > 1 
