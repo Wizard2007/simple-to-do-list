@@ -1,0 +1,66 @@
+*{margin:0; padding:0}
+.clearfix:after{content:"";display:block; height:0;clear:both}
+
+h1, h2 {
+    text-align: center;
+}
+
+h2{
+    padding-bottom: 50px;
+}
+
+.main-wrapper{
+    width: 600px;
+    margin: 0 auto;
+}
+
+.project-inner{
+    width: 100%;
+}
+
+.project-title-wrapper{
+    width: 100%;
+    background-color: aqua;
+    cursor: pointer;
+}
+
+.project-title-wrapper h3{
+    color: white;
+    float: left;
+    padding: 10px 0px;    
+}
+.icon-top{
+    float: left;
+    padding: 10px 15px;
+}
+.delete-top{
+    float: right;
+    padding: 14px 15px;    
+}
+.edit-top{
+    float: right;
+    padding: 14px 0px;    
+}
+.add-task-wrapper{
+    width: 100%;
+    background-color: aliceblue;
+}
+.plus-task{
+    float: left;
+    padding: 10px 15px;    
+}
+.add-task{
+    float: right;
+    padding: 5px 30px;
+    margin: 5px 10px;
+    background-color: darkseagreen;
+}
+.add-task-wrapper input[type=text]{
+    padding: 5px 0px;
+    margin: 8px 0px;
+    float: left;
+}
+.task-inner{
+    width: 100%;
+    
+}
