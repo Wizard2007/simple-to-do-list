@@ -16,6 +16,7 @@ h2{
 
 .project-inner{
     width: 100%;
+    padding-bottom: 30px;    
 }
 
 .project-title-wrapper{
@@ -62,5 +63,57 @@ h2{
 }
 .task-inner{
     width: 100%;
-    
+    padding: 6px 0px;
+}
+
+.task-state{
+    float: left;
+    width: 10%;
+    box-sizing: border-box;
+}
+.task-description{
+    float: left;    
+    width: 69%;
+    box-sizing: border-box;
+    color: rgb(84, 84, 84);
+}
+.test-edit-description-input{
+    display: none;
+}
+.task-edit-tool-bar{
+    float: left;
+    width: 21%;
+    box-sizing: border-box;
+}
+.task-manipulation{
+    float: left;
+    width: 33.33%;
+    box-sizing: border-box;
+    padding: 12px 0px;
+    display: none;
+}
+.task-move-up{
+    background: url(../img/move.png) no-repeat 15px 5px;
+}
+.task-edit{
+    background: url(../img/edit.png) no-repeat 15px 5px;
+}
+.task-delete{
+    background: url(../img/delete.png) no-repeat 15px 5px;
+}
+
+.task-inner:hover .task-manipulation{
+    display: block;
+}
+.task-inner:hover {
+    background-color: antiquewhite;
+    cursor: pointer;
+}
+.task-list-wrapper{
+    border: 1px solid#c5c5c5;
+    border-radius: 0px 0px 20px 20px
+}
+
+.task-state-input{
+    disabled="disabled";
 }
