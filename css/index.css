@@ -48,28 +48,44 @@ h2{
 }
 .plus-task{
     float: left;
-    padding: 10px 15px;    
+    padding: 10px 15px; 
+}
+.new-task-description{
+    width: 403px;
+    padding: 5px 0px;
+    margin: 8px 0px;
+    float: left;    
 }
 .add-task{
     float: right;
     padding: 5px 30px;
-    margin: 5px 10px;
+    margin: 8px 10px;
     background-color: darkseagreen;
 }
-.add-task-wrapper input[type=text]{
-    padding: 5px 0px;
-    margin: 8px 0px;
-    float: left;
-}
+
 .task-inner{
     width: 100%;
     padding: 6px 0px;
+    overflow: auto;
 }
 
 .task-state{
     float: left;
     width: 10%;
     box-sizing: border-box;
+}
+.project-title{
+    font-size: 30px;
+    display: inline-block;
+    color: white;    
+    float: left;
+    padding: 10px 0px;
+    padding-top: 4px;
+}
+.project-title-edit{
+    display: none;
+    width: 475px;
+    height: 30px;
 }
 .task-description{
     float: left;    
@@ -90,7 +106,7 @@ h2{
     width: 33.33%;
     box-sizing: border-box;
     padding: 12px 0px;
-    display: none;
+    visibility: hidden;
 }
 .task-move-up{
     background: url(../img/move.png) no-repeat 15px 5px;
@@ -103,7 +119,7 @@ h2{
 }
 
 .task-inner:hover .task-manipulation{
-    display: block;
+    visibility: visible;
 }
 .task-inner:hover {
     background-color: antiquewhite;
@@ -111,9 +127,34 @@ h2{
 }
 .task-list-wrapper{
     border: 1px solid#c5c5c5;
-    border-radius: 0px 0px 20px 20px
+    border-radius: 0px 0px 20px 20px;
+    overflow:auto;
 }
 
 .task-state-input{
-    disabled="disabled";
+    margin: 0 auto;
+    display: block;
+}
+
+.project-add{
+    width: 270px;
+    margin: 0 auto;    
+    background-color: blue;
+    display: block;
+    color: white;
+    font-size: 30px;
+    padding: 5px;    
+}
+.add-project{
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+.copy-right{
+    width: 270px;
+    margin: 0 auto;
+    color: white;
+    background-color: rgba(224, 216, 15, 0.72);
+    padding: 5px;
+    text-align: center;
 }

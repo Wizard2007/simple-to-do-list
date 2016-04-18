@@ -31,7 +31,7 @@ http://t99368a8.bget.ru/todo-list/api.php?action_type=get_all_projects_and_task
         echo json_encode($response_array);        
     }    
     function _AddProject($user_id){
-        $response_array = array("result" => 0, "description" =>"");
+        $response_array = array("result" => 0, "description" =>"", "id" => 0);
         CheckParams("project_name", $_GET, $response_array, $project_name);
         if (AddProject($project_name, $user_id, $id, $description)){
             $response_array["result"] = 1;
@@ -40,6 +40,7 @@ http://t99368a8.bget.ru/todo-list/api.php?action_type=get_all_projects_and_task
             $response_array["result"] = 0;
         }
         $response_array["description"] = $description;
+        $response_array["id"] = $id;
         echo json_encode($response_array);       
     }
     function _UpdateProject(){
@@ -68,7 +69,7 @@ http://t99368a8.bget.ru/todo-list/api.php?action_type=get_all_projects_and_task
         echo json_encode($response_array);        
     }
     function _AddTaskToProject(){
-        $response_array = array("result" => 0, "description" =>"");
+        $response_array = array("result" => 0, "description" =>"", "id" => 0);
         CheckParams("description", $_GET, $response_array, $description_);       
         CheckParams("project_id", $_GET, $response_array, $project_id);
         CheckParams("ded_line_date", $_GET, $response_array, $ded_line_date);   
@@ -80,6 +81,8 @@ http://t99368a8.bget.ru/todo-list/api.php?action_type=get_all_projects_and_task
             $response_array["result"] = 0;
         } 
         $response_array["description"] = $description;
+        $response_array["id"] =$id;
+        
         echo json_encode($response_array);        
     }
     function _UpDateTask(){
