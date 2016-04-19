@@ -1,3 +1,43 @@
+function GetTaskValues(ATask, AID){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd="0"+dd
+    } 
+
+    if(mm<10) {
+        mm="0"+mm
+    } 
+
+    today_str = yyyy+"-"+mm+"-"+dd;     
+    ATask["ID"] = AID;
+    console.log($(".task-state-input[data-id-task="+AID+"]"));
+    if($(".task-state-input[data-id-task="+AID+"]").attr("checked")=="true"){
+        ATask["IS_DONE"]=1;
+    }
+    else {
+        ATask["IS_DONE"]=0;
+    }
+    
+    ATask["DESCRIPTION"]= $(".task-description-edit[data-id-task="+AID+"]").val();
+    //ATask["PROJECT_ID"]=$($(".task-inner[data-id-task="+AID+"]").parent).attr("data-id-project");
+    //
+    ATask["DED_LINE_DATE"] = today_str;
+    
+    
+    return true;
+}
+function UpdateTask(ATask){
+    console.log("update task");
+    console.log(ATask);
+    $.get("/simple-to-do-list/api.php?action_type=update_task&id="+ATask["ID"]+"&description="+ATask["DESCRIPTION"]+" &ded_line_date="+ATask["DED_LINE_DATE"]+"&is_done="+ATask["IS_DONE"],function (data){
+        console.log(data);
+    });    
+    return true;
+}
 function GetProjectsValues(AProject , AID){
     AProject["ID"] = AID;
     AProject["NAME"] = $(".project-title-edit[data-id-project="+AID+"]").val();
@@ -19,6 +59,7 @@ function DeleteProject(AID){
     });    
     return true;
 }
+
 function OnProjectAdd(){
     console.log("add project");
     //add project in to DB
@@ -28,8 +69,7 @@ function OnProjectAdd(){
         var id = jsonObj["id"];
         AddProjectOnPage({ID:id, NAME:"", Tasks:[]});
         ProjectEdit(id);
-    });    
-    
+    });
 }
 function ProjectDelete(AID){
     console.log($(".project-inner[data-id-project="+AID+"]"));
@@ -48,12 +88,13 @@ function OnProjectDelete(){
     var id=$(el_current).attr("data-id-project");
     ProjectDelete(id);
 }
-function ProjectEdit(AID){
+function ProjectEdit(AID){    
     console.log($(".project-title[data-id-project="+AID+"]"));
     $(".project-title[data-id-project="+AID+"] div").css({display: "none"});
     $(".project-title-edit[data-id-project="+AID+"]").css({display: "block"});
     $(".project-title-edit[data-id-project="+AID+"]").focus();
-    return true;
+    return true;    
+
 }
 function OnProjectEdit(){
     console.log("edit project");
@@ -79,15 +120,85 @@ function OnProjectEditEnd(){
 function OnMoveUpTask(){
     console.log("task move up");    
 }
+function TaskEdit(AID){
+    console.log($(".task-description[data-id-task="+AID+"]"));
+    $(".task-description[data-id-task="+AID+"] div").css({display: "none"});
+    $(".task-description-edit[data-id-task="+AID+"]").css({display: "block"});
+    //$(".task-description-edit[data-id-task="+AID+"]").focus();
+    $(".task-state-input[data-id-task="+AID+"]").removeAttr("disabled");
+    return true;    
+}
 function OnTaskEdit(){
-    console.log("edit task");    
+    console.log("edit task");
+    var el_current = event.currentTarget;
+    var id = $(el_current).attr("data-id-task");
+    TaskEdit(id);
+}
+function OnTaskEditEnd(){
+    // UpDate Task in DB
+    var el_current = event.currentTarget;
+    var id=$(el_current).attr("data-id-task");
+    ATask={};
+    GetTaskValues(ATask, id);
+    if (UpdateTask(ATask))
+    {
+        console.log($(".task-description[data-id-task="+id+"]"));
+        $(".task-description[data-id-task="+id+"] div").css({display: "block"});
+        $(".task-description[data-id-task="+id+"] div").text($(".task-description-edit[data-id-task="+id+"]").val());
+        $(".task-description-edit[data-id-task="+id+"]").css({display: "none"});
+        $(".task-state-input[data-id-task="+id+"]").attr("disabled","disabled");
+    }
+}
+function DeleteTask(AID){
+    console.log("delte task");
+    console.log(AID);
+    $.get("/simple-to-do-list/api.php?action_type=delete_task&id="+AID,function (data){
+        console.log(data);
+    });       
+    return true;
 }
 function OnDeleteTask(){
     console.log("delete task");
-
+    var el_current = event.currentTarget;
+    var id=$(el_current).attr("data-id-task");
+    if(DeleteTask(id)){
+        $(".task-inner[data-id-task="+id+"]").css({display: "none"}); 
+    }
 }
 function OnTaskAdd(){
     console.log("add task");
+    var el_current = event.currentTarget;
+    var id=$(el_current).attr("data-id-project");
+    var el_new_task_description = $(".new-task-description[data-id-project="+id+"]");
+    if (TaskAdd(id, el_new_task_description.val())){
+        el_new_task_description.val("");
+    }
+}
+function TaskAdd(AProject_ID, ADescription){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd="0"+dd
+    } 
+
+    if(mm<10) {
+        mm="0"+mm
+    } 
+
+    today_str = yyyy+"-"+mm+"-"+dd;     
+    //add task in to DB
+    $.get("/simple-to-do-list/api.php?action_type=add_task_to_project&description="+ADescription+"&project_id="+AProject_ID+"&ded_line_date="+today_str+"&is_done=0",function (data){
+        console.log(data);
+        var jsonObj = JSON.parse(data);
+        var id = jsonObj["id"];
+        var wrapper = $(".task-list-wrapper[data-id-project="+AProject_ID+"]");
+        AddTaskOnPage({"ID": id, "IS_DONE": 0, "DESCRIPTION": ADescription}, wrapper);
+        //TaskEdit(id);
+    });
+    return true;
 }
 function AddTaskOnPage(ATask, AWrapper){
     console.log("add task in cicle");
@@ -95,40 +206,58 @@ function AddTaskOnPage(ATask, AWrapper){
     el_task_inner.attr("data-id-task", ATask["ID"]);
     AWrapper.append(el_task_inner);
     
-    var el_task_state = $("<div>").addClass("task-state");         el_task_state.attr("data-id-task", ATask["ID"]);  
+    var el_task_state = $("<div>").addClass("task-state");         
+    el_task_state.attr("data-id-task", ATask["ID"]);  
     el_task_inner.append(el_task_state);
     
         var el_task_state_input = $("<input>").addClass("task-state-input");
-        el_task_state_input.attr('type','checkbox');
-        el_task_state_input.attr('disabled','disabled');
+        el_task_state_input.attr("type","checkbox");
+        el_task_state_input.attr("disabled","disabled");
 
-        if (ATask["IS_DONE"] = "1"){
-            el_task_state_input.attr('checked','true');    
+        if (ATask["IS_DONE"]== "1"){
+            el_task_state_input.attr("checked","true");    
         }
         else {
-            el_task_state_input.attr('checked','false');    
+            el_task_state_input.removeAttr("checked");
         }
+        el_task_state_input.on("blur",OnTaskEditEnd);
         el_task_state_input.attr("data-id-task", ATask["ID"]);
         el_task_state.append(el_task_state_input);
     
         var el_task_description = $("<div>").addClass("task-description");
-        $(el_task_description).text(ATask["DESCRIPTION"]);
+        //$(el_task_description).text(ATask["DESCRIPTION"]);
+    
         el_task_description.attr("data-id-task", ATask["ID"]);
         el_task_inner.append(el_task_description);
+    
+        var el_task_description_div = $("<div>");
+        $(el_task_description_div).text(ATask["DESCRIPTION"]);
+        $(el_task_description).append(el_task_description_div);
+        
+        var el_task_description_edit = $("<input>").addClass("task-description-edit");
+        $(el_task_description_edit).attr("type","text");
+        $(el_task_description_edit).attr("data-id-task", ATask["ID"]);
+        $(el_task_description_edit).on("blur",OnTaskEditEnd);
+        $(el_task_description_edit).val(ATask["DESCRIPTION"]);
+        $(el_task_description).append(el_task_description_edit);
     
         var el_task_edit_tool_bar = $("<div>").addClass("task-edit-tool-bar clearfix");
         
     
             var el_task_move_up =$("<div>").addClass("task-manipulation task-move-up");
             el_task_move_up.attr("data-id-task", ATask["ID"]);
+            el_task_move_up.on("click", OnMoveUpTask);
             el_task_edit_tool_bar.append(el_task_move_up);
 
             var el_task_edit =$("<div>").addClass("task-manipulation task-edit");
             el_task_edit.attr("data-id-task", ATask["ID"]);
+            el_task_edit.on("click", OnTaskEdit);
+            el_task_edit.on("blur",OnTaskEdit);
             el_task_edit_tool_bar.append(el_task_edit);
 
             var el_task_delete =$("<div>").addClass("task-manipulation task-delete");
             el_task_delete.attr("data-id-task", ATask["ID"]);
+            el_task_delete.on("click", OnDeleteTask);
             el_task_edit_tool_bar.append(el_task_delete);
     el_task_edit_tool_bar.attr("data-id-task", ATask["ID"]);
     el_task_inner.append(el_task_edit_tool_bar);
@@ -145,8 +274,8 @@ function AddProjectOnPage(AProject){
     
         var el_icon_top = $("<img>").addClass("icon-top");
 
-        $(el_icon_top).attr('src', 'img/icon-top.png');
-        $(el_icon_top).attr('alt', 'project img');    
+        $(el_icon_top).attr("src", "img/icon-top.png");
+        $(el_icon_top).attr("alt", "project img");    
         el_icon_top.attr("data-id-project", AProject["ID"]);
         el_project_title_wrapper.append(el_icon_top);
 
@@ -168,15 +297,15 @@ function AddProjectOnPage(AProject){
         el_project_title.append(el_project_title_edit);
     
         var el_delete_top = $("<img>").addClass("delete-top");
-        el_delete_top.attr('src', 'img/delete-top.png');
-        el_delete_top.attr('alt', 'delete project');
+        el_delete_top.attr("src", "img/delete-top.png");
+        el_delete_top.attr("alt", "delete project");
         $(el_delete_top).on("click", OnProjectDelete);
         el_delete_top.attr("data-id-project", AProject["ID"]);
         el_project_title_wrapper.append(el_delete_top);
 
         var el_edit_top = $("<img>").addClass("edit-top");
-        el_edit_top.attr('src', 'img/edit-top.png');
-        el_edit_top.attr('alt', 'edit project');
+        el_edit_top.attr("src", "img/edit-top.png");
+        el_edit_top.attr("alt", "edit project");
         $(el_edit_top).on("click", OnProjectEdit);
         el_edit_top.attr("data-id-project", AProject["ID"]);
         el_project_title_wrapper.append(el_edit_top);
@@ -186,14 +315,15 @@ function AddProjectOnPage(AProject){
     el_project_inner.append(el_add_task_wrapper);
     
         var el_plus_task = $("<img>").addClass("plus-task");
-        el_plus_task.attr('src','img/plus.png');
-        el_plus_task.attr('alt','add task');
+        el_plus_task.attr("src","img/plus.png");
+        el_plus_task.attr("alt","add task");
         el_plus_task.attr("data-id-project", AProject["ID"]);
+        el_plus_task.on("click", OnTaskAdd);
         el_add_task_wrapper.append(el_plus_task);
 
         var el_new_task_description = $("<input>").addClass("new-task-description")
-        el_new_task_description.attr('type','text');
-        el_new_task_description.attr('placeholder','Start typing here to create task ...');
+        el_new_task_description.attr("type","text");
+        el_new_task_description.attr("placeholder","Start typing here to create task ...");
         el_new_task_description.attr("data-id-project", AProject["ID"]);
         el_add_task_wrapper.append(el_new_task_description);
 
@@ -211,11 +341,7 @@ function AddProjectOnPage(AProject){
         function(item, i, arr){
             AddTaskOnPage(item, el_task_list_wrapper);
         }
-    );
-    
-    
-    
-    
+    );  
 }
 function FillDataList(){
     
@@ -244,7 +370,6 @@ function FillDataList(){
 }
 
 $(document).ready(function(){
-    console.log($(".main-wrapper[data-atribute=1]"));
     FillDataList();    
     /*
     $(".delete-top").on("click", OnProjectDelete);

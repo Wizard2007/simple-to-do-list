@@ -66,7 +66,7 @@ description= - task descripition
 ded_line_date= - dedline darte date
 
 example url:
-t/api.php?action_type=update_task&id=1&description=rrr description&ded_line_date=01.01.2016&is_done=1
+/api.php?action_type=update_task&id=1&description=rrr description&ded_line_date=01.01.2016&is_done=1
 
 Delete Task
 
