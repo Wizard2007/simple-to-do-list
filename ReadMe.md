@@ -4,7 +4,7 @@ All request return json file in same format
 
 {"result":x,"description":"s"}
 
-Where x - is the result of operation 0 - error , 1 - all done, and s - is the dwscription of x;
+Where x - is the result of operation 0 - error , 1 - all done, and s - is the description of x;
 
 Project API
 
